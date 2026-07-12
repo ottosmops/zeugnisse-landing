@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zeugnisbemerkungen – formulierte Bemerkungen in Sekunden</title>
+<meta name="description" content="Noten eingeben, in Sekunden eine formulierte, wohlwollende Zeugnisbemerkung erhalten. Für die 5. bis 10. Klasse. KI in der Schweiz gehostet.">
+<link rel="icon" href="img/kanguru.png">
+<style>
+    :root {
+        --bg: #f4f5f7; --card: #ffffff; --ink: #1f2733; --muted: #67707e;
+        --line: #e2e5ea; --accent: #2f6f4f; --accent-ink: #ffffff; --accent-soft: #e6f0ea;
+        --radius: 16px; --shadow: 0 1px 2px rgba(20,30,50,.04), 0 10px 30px rgba(20,30,50,.07);
+    }
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #14171c; --card: #1d222a; --ink: #e8ebf0; --muted: #9aa4b2;
+            --line: #2c333d; --accent: #4fae7f; --accent-ink: #0d1512; --accent-soft: #23312a;
+            --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.4);
+        }
+        img.logo { filter: invert(1) hue-rotate(180deg); }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        margin: 0; background: var(--bg); color: var(--ink);
+        font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 1020px; margin: 0 auto; padding: 0 20px; }
+    a { color: var(--accent); }
+    h1, h2, h3 { letter-spacing: -.02em; line-height: 1.15; }
+
+    /* Header */
+    header.site { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px);
+        background: color-mix(in srgb, var(--bg) 82%, transparent); border-bottom: 1px solid var(--line); }
+    header.site .row { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; max-width: 1020px; margin: 0 auto; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 800; }
+    .brand img { height: 34px; }
+    .btn { display: inline-block; border: 0; border-radius: 11px; padding: 12px 22px; font: inherit;
+        font-weight: 700; cursor: pointer; background: var(--accent); color: var(--accent-ink); text-decoration: none; text-align: center; }
+    .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .btn.ghost:hover { border-color: var(--accent); }
+    .btn.sm { padding: 9px 16px; font-size: .92rem; }
+
+    /* Hero */
+    .hero { text-align: center; padding: 64px 0 40px; }
+    .hero img.logo { height: 96px; margin-bottom: 18px; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 16px; }
+    .hero p.lead { font-size: 1.2rem; color: var(--muted); max-width: 640px; margin: 0 auto 28px; }
+    .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero small { display: block; color: var(--muted); margin-top: 14px; font-size: .9rem; }
+
+    .trust { display: flex; gap: 10px 26px; justify-content: center; flex-wrap: wrap; color: var(--muted);
+        font-size: .92rem; padding: 8px 0 44px; }
+    .trust span { display: inline-flex; align-items: center; gap: 7px; }
+
+    section { padding: 44px 0; }
+    section h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); text-align: center; margin: 0 0 8px; }
+    section p.sub { text-align: center; color: var(--muted); max-width: 620px; margin: 0 auto 34px; }
+
+    .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .feature { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+    .feature .ic { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent);
+        display: grid; place-items: center; font-size: 1.2rem; margin-bottom: 12px; }
+    .feature h3 { margin: 0 0 6px; font-size: 1.08rem; }
+    .feature p { margin: 0; color: var(--muted); font-size: .96rem; }
+
+    .steps { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); counter-reset: step; }
+    .step { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .step .n { counter-increment: step; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: var(--accent-ink);
+        display: grid; place-items: center; font-weight: 800; margin-bottom: 12px; }
+    .step .n::before { content: counter(step); }
+    .step h3 { margin: 0 0 6px; font-size: 1.05rem; }
+    .step p { margin: 0; color: var(--muted); font-size: .96rem; }
+
+    /* Pricing */
+    .prices { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: stretch; }
+    .price { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; }
+    .price.featured { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft), var(--shadow); }
+    .price .tag { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px; min-height: 1em; }
+    .price h3 { margin: 0; font-size: 1.15rem; }
+    .price .amount { font-size: 2rem; font-weight: 800; margin: 8px 0 2px; }
+    .price .per { color: var(--muted); font-size: .9rem; margin-bottom: 16px; }
+    .price ul { list-style: none; padding: 0; margin: 0 0 20px; color: var(--muted); font-size: .95rem; }
+    .price ul li { padding: 5px 0 5px 24px; position: relative; }
+    .price ul li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+    .price .btn { margin-top: auto; }
+    .price-note { text-align: center; color: var(--muted); font-size: .9rem; margin-top: 18px; }
+
+    /* FAQ */
+    .faq { max-width: 720px; margin: 0 auto; }
+    details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 4px 18px; margin-bottom: 12px; }
+    details summary { cursor: pointer; font-weight: 600; padding: 14px 0; list-style: none; }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::after { content: "+"; float: right; color: var(--muted); font-weight: 400; }
+    details[open] summary::after { content: "–"; }
+    details p { margin: 0 0 14px; color: var(--muted); }
+
+    .cta-band { background: var(--accent-soft); border-radius: var(--radius); padding: 44px 24px; text-align: center; margin: 20px 0; }
+    .cta-band h2 { margin: 0 0 20px; }
+
+    footer.site { border-top: 1px solid var(--line); padding: 30px 0 50px; color: var(--muted); font-size: .9rem; }
+    footer.site .row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer.site a { color: var(--muted); text-decoration: none; margin-left: 16px; }
+    footer.site a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<header class="site">
+    <div class="row">
+        <a href="#top" class="brand"><img src="img/kanguru.png" class="logo" alt="">Zeugnisbemerkungen</a>
+        <div>
+            <a href="https://zeugnisse.k-r.ch/login" class="btn ghost sm">Anmelden</a>
+            <a href="https://zeugnisse.k-r.ch/register" class="btn sm">Kostenlos starten</a>
+        </div>
+    </div>
+</header>
+
+<a id="top"></a>
+<div class="wrap">
+
+    <div class="hero">
+        <img src="img/kanguru.png" class="logo" alt="Zeugnisbemerkungen">
+        <h1>Zeugnisbemerkungen, die sich nicht wie Textbausteine lesen</h1>
+        <p class="lead">Noten eingeben – in Sekunden eine formulierte, wohlwollende Bemerkung
+            für die 5. bis 10. Klasse. Die KI ist in der Schweiz gehostet.</p>
+        <div class="cta-row">
+            <a href="https://zeugnisse.k-r.ch/register" class="btn">Kostenlos starten</a>
+            <a href="#preise" class="btn ghost">Preise ansehen</a>
+        </div>
+        <small>15 Bemerkungen gratis · keine Kreditkarte nötig</small>
+    </div>
+
+    <div class="trust">
+        <span>🇨🇭 KI in der Schweiz gehostet</span>
+        <span>🔒 Vorname bleibt im Browser</span>
+        <span>🚫 Keine Nutzung zum Training</span>
+    </div>
+
+    <section id="funktionen">
+        <h2>Alles, was eine gute Bemerkung braucht</h2>
+        <p class="sub">Strukturierte Eingabe, natürliche Sprache – und volle Kontrolle über das Ergebnis.</p>
+        <div class="grid">
+            <div class="feature"><div class="ic">📋</div><h3>Sechs Kompetenzbereiche</h3><p>Soziale Verantwortung, Kooperation, Kommunikation, Interesse &amp; Motivation, Konzentration &amp; Ausdauer, Lernumgebung &amp; Lernreflexion.</p></div>
+            <div class="feature"><div class="ic">🔢</div><h3>Deutsche oder Schweizer Noten</h3><p>Notensystem umschaltbar: 1 = beste (D) oder 6 = beste (CH). Das Programm interpretiert automatisch richtig.</p></div>
+            <div class="feature"><div class="ic">✍️</div><h3>Rechtschreibung D oder CH</h3><p>Mit «ß» oder durchgehend «ss» – korrekt umgesetzt, inklusive Umlauten.</p></div>
+            <div class="feature"><div class="ic">🗓️</div><h3>Zwischen- oder Jahreszeugnis</h3><p>Präsens («zeigt») oder Präteritum («zeigte») – passend zur Zeugnisart.</p></div>
+            <div class="feature"><div class="ic">🎚️</div><h3>Tonalität nach Klassenstufe</h3><p>Von der 5. bis zur 10. Klasse – die Sprache passt sich dem Alter an.</p></div>
+            <div class="feature"><div class="ic">🧩</div><h3>Volle Kontrolle</h3><p>Jede Bemerkung ist editierbar, kopierbar und mit einem Klick neu generierbar – für mehr Varianz.</p></div>
+        </div>
+    </section>
+
+    <section id="so">
+        <h2>In drei Schritten zur Bemerkung</h2>
+        <div class="steps">
+            <div class="step"><div class="n"></div><h3>Noten erfassen</h3><p>Vergib in den sechs Bereichen eine Note von 1 bis 6.</p></div>
+            <div class="step"><div class="n"></div><h3>Hinweise ergänzen</h3><p>Optional: besondere Beobachtungen als Stichworte – der Rest kommt von selbst.</p></div>
+            <div class="step"><div class="n"></div><h3>Fertig anpassen</h3><p>Bemerkung erhalten, bei Bedarf feilen, kopieren – erledigt.</p></div>
+        </div>
+    </section>
+
+    <section id="datenschutz">
+        <h2>Datenschutz ernst gemeint</h2>
+        <p class="sub">Ein Werkzeug für die Schule muss sorgsam mit Schülerdaten umgehen.</p>
+        <div class="grid">
+            <div class="feature"><div class="ic">🇨🇭</div><h3>In der Schweiz gehostet</h3><p>Die KI läuft bei Infomaniak in der Schweiz. Die Daten verlassen das Land nicht und werden nicht zum Training verwendet.</p></div>
+            <div class="feature"><div class="ic">🔒</div><h3>Der Vorname bleibt lokal</h3><p>Die KI arbeitet mit einem Platzhalter. Der echte Vorname wird erst in deinem Browser eingesetzt – er wird nie an die KI gesendet.</p></div>
+            <div class="feature"><div class="ic">💡</div><h3>Volle Transparenz</h3><p>Zu jeder Bemerkung siehst du Tokenverbrauch und geschätzte Kosten. Keine versteckten Gebühren.</p></div>
+        </div>
+    </section>
+
+    <section id="preise">
+        <h2>Faire Preise</h2>
+        <p class="sub">Guthaben statt Abo – passend zur schubweisen Zeugnisarbeit. 1 Guthaben = 1 Bemerkung.</p>
+        <div class="prices">
+            <div class="price">
+                <div class="tag">&nbsp;</div>
+                <h3>Gratis</h3>
+                <div class="amount">CHF 0</div>
+                <div class="per">zum Ausprobieren</div>
+                <ul><li>15 Bemerkungen</li><li>Alle Funktionen</li><li>Keine Kreditkarte</li></ul>
+                <a href="https://zeugnisse.k-r.ch/register" class="btn ghost">Konto erstellen</a>
+            </div>
+            <div class="price">
+                <div class="tag">&nbsp;</div>
+                <h3>Guthaben S</h3>
+                <div class="amount">CHF 5</div>
+                <div class="per">einmalig</div>
+                <ul><li>100 Bemerkungen</li><li>Verfällt nicht</li></ul>
+                <a href="https://zeugnisse.k-r.ch/register" class="btn ghost">Loslegen</a>
+            </div>
+            <div class="price featured">
+                <div class="tag">Beliebt</div>
+                <h3>Guthaben M</h3>
+                <div class="amount">CHF 12</div>
+                <div class="per">einmalig</div>
+                <ul><li>300 Bemerkungen</li><li>Bester Wert</li><li>Verfällt nicht</li></ul>
+                <a href="https://zeugnisse.k-r.ch/register" class="btn">Loslegen</a>
+            </div>
+            <div class="price">
+                <div class="tag">&nbsp;</div>
+                <h3>Guthaben L</h3>
+                <div class="amount">CHF 20</div>
+                <div class="per">einmalig</div>
+                <ul><li>600 Bemerkungen</li><li>Für ein ganzes Jahr</li><li>Verfällt nicht</li></ul>
+                <a href="https://zeugnisse.k-r.ch/register" class="btn ghost">Loslegen</a>
+            </div>
+        </div>
+        <p class="price-note">Guthaben kaufst du bequem im Konto. Zahlung folgt in Kürze.</p>
+    </section>
+
+    <section id="faq">
+        <h2>Häufige Fragen</h2>
+        <div class="faq">
+            <details><summary>Wie gut sind die Bemerkungen wirklich?</summary><p>Die KI formuliert zusammenhängenden, wohlwollenden Fliesstext und geht auf alle bewerteten Bereiche ein. Du behältst die Kontrolle: Jeder Text ist editierbar und neu generierbar.</p></details>
+            <details><summary>Werden Schülerdaten geschützt?</summary><p>Ja. Die KI ist in der Schweiz gehostet und nutzt die Daten nicht zum Training. Der Vorname wird nie an die KI gesendet, sondern erst lokal im Browser eingesetzt.</p></details>
+            <details><summary>Für welche Stufen ist das Programm gedacht?</summary><p>Für die 5. bis 10. Klasse. Die Tonalität passt sich der gewählten Klassenstufe an.</p></details>
+            <details><summary>Deutsche oder Schweizer Konventionen?</summary><p>Beides. Notensystem (1 = beste oder 6 = beste) und Rechtschreibung («ß» oder «ss») sind frei wählbar.</p></details>
+            <details><summary>Wie funktioniert die Bezahlung?</summary><p>Du startest mit 15 Gratis-Bemerkungen. Danach kaufst du Guthaben (1 Guthaben = 1 Bemerkung). Guthaben verfällt nicht.</p></details>
+        </div>
+    </section>
+
+    <div class="cta-band">
+        <h2>Bereit, Zeit zu sparen?</h2>
+        <a href="https://zeugnisse.k-r.ch/register" class="btn">Jetzt kostenlos starten</a>
+    </div>
+
+</div>
+
+<footer class="site">
+    <div class="wrap row">
+        <div>© 2026 Kränzle Ritter · Zeugnisbemerkungen</div>
+        <div>
+            <a href="https://zeugnisse.k-r.ch/login">Anmelden</a>
+            <a href="#datenschutz">Datenschutz</a>
+            <a href="mailto:kraenzle@k-r.ch">Kontakt</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
